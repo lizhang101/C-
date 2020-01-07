@@ -22,7 +22,7 @@ public:
     ddog(const ddog& rhs) = delete;
 private:
     //enforce the ddog object to be on heap, stay out of stack. For some embedded programming.
-    ~ddog() {}
+    ~ddog() { delete this; }
 
 
 };
@@ -37,6 +37,29 @@ public:
 
     ~dog() {}   // 1. call base class destructor
                 // 2. call members' destructor.
+};
+
+/* share_ptr can enforce both base and sub class's destructors called even the base destructor is not virtual.
+ * this can be used when a class is derived from STL since all STL classes don't have virtual destructor.
+*/
+
+/* Dont leave exceptions out of destructor, because this may cause multiple pending exceptions and cause program to crash.
+ * Solution1. catch the exception in the destructor.
+ * Solution 2. create another function to throw exceptions called before destructor is called.
+ */
+typedef int MYEXCEPTION;
+
+class dogExceptionSol1 {
+public:
+    ~dogException() {
+        try {
+
+        } catch (MYEXCEPTION e) {
+
+        } catch (...) { // <<<<< catch all other exceptions.
+
+        }
+    }
 };
 
 int main() {
