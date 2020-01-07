@@ -12,13 +12,21 @@ class ddog {
     //And also this makes ddog incompatible with STL lib.
     //fixme: string& m_name;
 
+public:
     /* C++11 */
     // even you defined ddog constructor, you can still use compiler's generated constructor in this way.
     ddog() = default;
     ddog(string name) {}
 
+    //disable the copy constructor
+    ddog(const ddog& rhs) = delete;
+private:
+    //enforce the ddog object to be on heap, stay out of stack. For some embedded programming.
+    ~ddog() {}
+
+
 };
-//equivalent to :
+//with an empty class ddog{}, it's equivalent to :
 class dog {
 public:
     dog(const dog& rhs) { } // member by member initialization
