@@ -16,7 +16,7 @@ public:
     /* C++11 */
     // even you defined ddog constructor, you can still use compiler's generated constructor in this way.
     ddog() = default;
-    ddog(string name) {}
+    ddog(std::string name) {}
 
     //disable the copy constructor
     ddog(const ddog& rhs) = delete;
