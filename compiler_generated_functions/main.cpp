@@ -22,6 +22,9 @@ public:
     ddog(const ddog& rhs) = delete;
 private:
     //enforce the ddog object to be on heap, stay out of stack. For some embedded programming.
+    //reason:   if put the object of this class on stack, you'll have to provide a public function like:
+    //          void destroyMe(){ delete this; }
+    //          Then, when user calls destroyMe(), object deleted; but it will be delete again when it's out of scope.
     ~ddog() { delete this; }
 
 
