@@ -1,6 +1,3 @@
-#include <iostream>
-class dog{};
-class yellowdog{};
 //############################################################################
 /*
  * All Castings Considered
@@ -15,16 +12,16 @@ class yellowdog{};
  * 1. static_cast
  */
 int i = 9;
-float f = static_cast<float>(i);  // convert OBJECT from one type to another
+float f = static_cast<float>(i);  // convert object from one type to another
 dog d1 = static_cast<dog>(string("Bob"));  // Type conversion needs to be defined.
-dog* pd = static_cast<dog*>(new yellowdog()); // convert pointer/reference from one type
-// to a related type (down/up cast)
+dog* pd = static_cast<dog*>(new yellowdog()); // convert pointer/reference from one type 
+                                              // to a related type (down/up cast)
 
 /*
- * 2. dynamic_cast
+ * 2. dynamic_cast 
  */
 dog* pd = new yellowdog();
-yellowdog py = dynamic_cast<yellowdog*>(pd);
+yellowdog py = dynamic_cast<yellowdog*>(pd); 
 // a. It convert pointer/reference from one type to a related type (down cast)
 // b. run-time type check.  If succeed, py==pd; if fail, py==0;
 // c. It requires the 2 types to be polymorphic (have virtual function).
@@ -33,18 +30,18 @@ yellowdog py = dynamic_cast<yellowdog*>(pd);
  * 3. const_cast
  */                                        // only works on pointer/reference
 const char* str = "Hello, world.";         // Only works on same type
-char* modifiable = const_cast<char*>(str); // cast away constness of the object
-// being pointed to
+char* modifiable = const_cast<char*>(str); // cast away constness of the object 
+                                           // being pointed to
 
 /*
  * 4. reinterpret_cast
  */
-long p = 51110980;
+long p = 51110980;                   
 dog* dd = reinterpret_cast<dog*>(p);  // re-interpret the bits of the object pointed to
 // The ultimate cast that can cast one pointer to any other type of pointer.
 
 /*
- * C-Style Casting:
+ * C-Style Casting:  
  */
 short a = 2000;
 int i = (int)a;  // c-like cast notation
@@ -70,29 +67,23 @@ int j = int(a);   // functional notation
  * Example with dynamic_cast:
  */
 class dog {
-public:
-    virtual ~dog() {}
+   public:
+   virtual ~dog() {}
 };
 
 class yellowdog : public dog {
-    int age;
-public:
-    void bark() { cout<< "woof. I am " << age  << endl; }
+   int age;
+   public:
+   void bark() { cout<< "woof. I am " << age  << endl; }
 };
 
 int main() {
-    dog* pd = new dog();
-    //... after a long code, we make mistakes. using pd as yellowdog.
-    yellowdog* py = dynamic_cast<yellowdog*>(pd);
-    py->bark(); //the compiler will look up a static function. since bark in derived class doesn't access any member,
-    // it could be treated as static function. so compiler will call yellowdog::bark with a base class pointer,
-    // even it's not a virtual function.
-    cout << "py = " << py << endl;
-    cout << "pd = " << pd << endl;
-    // solution 1: check py
-    if (py) py->bark();
-    //solution 2(better) :
-    // define a virtual bark() in dog.
+   dog* pd = new dog();
+   yellowdog* py = dynamic_cast<yellowdog*>(pd);
+   py->bark();
+   cout << "py = " << py << endl;
+   cout << "pd = " << pd << endl;
+   ...
 }
 
 OUTPUT:
@@ -101,16 +92,28 @@ py = 0
 pd = 57873400
 
 
+
+
+
+
+
+
+
 /* casting could be a handy hack tool */
 
 class dog {
-public:
-    std::string m_name;
-    dog():m_name("Bob") {}
-    void bark() const {
-        std::cout << "My name is " << m_name << std::endl;
-    }
+	public:
+	std::string m_name;
+	dog():m_name("Bob") {}
+	void bark() const { 
+	  std::cout << "My name is " << m_name << std::endl;
+	}
 };
+
+
+
+
+
 
 
 //	  m_name = "Henry";
@@ -121,9 +124,9 @@ public:
 /*
  * =========================================  C++ Style Casting ================================
  *                             Generate_Code   Generate_data      risky   data_type
- * Object Casting:
+ * Object Casting:            
  *    static_cast                 yes              yes             2      any types
- *                                                                       (as long as type
+ *                                                                       (as long as type 
  *                                                                       conversion is defined)
  * Pointer/Reference Casting:
  *    static_cast                 no               no              4     related types
@@ -138,7 +141,7 @@ public:
  * =========================================  C Style Casting ================================
  *                             Generate_Code  Generate_data      risky   data_type
  * Object Casting:               yes              yes             5      any types
- *                                                                       (as long as type
+ *                                                                       (as long as type 
  *                                                                       conversion is defined)
  * Pointer/Reference Casting:    no               no              5      any types
  *
@@ -147,11 +150,11 @@ public:
  *
  * Note:
  * 1. const_cast, dynamic_cast and reinterpret_cast can only work on pointers/references.
- * 2. static_cast of objects is very different from static_cast of pointers.
- * 3. reinterpret_cast basically reassigning the type information of the bit pattern.
+ * 2. static_cast of objects is very different from static_cast of pointers. 
+ * 3. reinterpret_cast basically reassigning the type information of the bit pattern. 
  *    It should only be used in low-level coding.
  * 4. dynamic_cast does static_cast plus run-time type check.
- * 5. dynamic_cast and static_cast for pointers can only work on related type (e.g.,
+ * 5. dynamic_cast and static_cast for pointers can only work on related type (e.g., 
  *    base <-> derived).
  *
  */
@@ -161,21 +164,21 @@ public:
 /* Use polymorphism to minimize castings */
 
 class dog {
-public:
-    virtual ~dog() {}
+   public:
+   virtual ~dog() {}
 };
 
 class yellowdog : public dog {
-public:
-    void bark() { cout<< "Yellow dog rules! "  << endl; }
+   public:
+   void bark() { cout<< "Yellow dog rules! "  << endl; }
 };
 
 int main() {
-    dog* pd = get_dog();
-    if (yellowdog *py = dynamic_cast<yellowdog*>(pd)) {
-        py->bark();
-    }
-    delete pd;
+   dog* pd = get_dog();
+   if (yellowdog *py = dynamic_cast<yellowdog*>(pd)) {
+      py->bark();
+   }
+   delete pd;
 }
 
 
@@ -183,19 +186,35 @@ int main() {
 /* Add virtual bark() in dog */
 
 class dog {
-public:
-    virtual ~dog() {}
-    virtual void bark() {}
+   public:
+   virtual ~dog() {}
+   virtual void bark() {}
 };
 
 class yellowdog : public dog {
-public:
-    void bark() { cout<< "Yellow dog rules! "  << endl; }
+   public:
+   void bark() { cout<< "Yellow dog rules! "  << endl; }
 };
 
 int main() {
-    dog* pd = get_dog();
-    pd->bark();
-    delete pd;
+   dog* pd = get_dog();
+   pd->bark();
+   delete pd;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

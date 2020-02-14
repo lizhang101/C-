@@ -55,7 +55,7 @@ d.f(8);
 
 
 
-//The following code won't compile because f(int a) is shadowed by D::f(). one need to use using to fix this.
+
 class B {
    public:
       void f(int a);
@@ -63,8 +63,6 @@ class B {
  
 class D : public B { 
    public:
-      //FIX for f(int a) shadowing.
-      // using B::f; // w/o this statement, this code won't compile.
       void f();
 };
 
@@ -86,8 +84,8 @@ static void h() { std::cout << "h()\n"; }
 
 void g() { std::cout << "global g()\n"; }
 namespace {
-   void g() { std::cout << "g()\n"; }// local g() in the anonymous namespace will be used when called in this file, instead of the global version.
-   void h() { std::cout << "h()\n"; g(); } // you can't call h() from another file, like you put a static void h() in global scope.
+   void g() { std::cout << "g()\n"; }
+   void h() { std::cout << "h()\n"; g(); }
 }
 
 int main() {
@@ -117,23 +115,25 @@ void g( X ) { cout << " calling A::g() \n"; }
 
 int main() {
    A::X x1;
-   g(x1);   // Koenig Lookup, or Argument Dependent Lookup (ADL) see below.
+   g(x1);   // Koenig Lookup, or Argument Dependent Lookup (ADL)
 }
-/* details:
- if we don't have the global g(x):
- This code can compile and run even g() is only defined in namespace A. But it can work.
- Because:
- compile will search local -> global scope, AND where the parameter type is defined.
- So since x1 is A::X which is defined in namespace A, so compiler will use the A::g(x);
 
- if we have the global g(x), then the code can't compile. because there are 2 g()
-*/
+
 
 
 //Notes:
 //1. Remove A:: from A::g(x);
 //2. Add a global g(A::X);
 // Argument Dependent Lookup (ADL)
+
+
+
+
+
+
+
+
+
 
 
 // Example 2:
@@ -145,8 +145,14 @@ class C {
 
 int main() {
    C::Y y;
-   h(y);  // Error. Koenig lookup only works for namespace, not class
+   h(y);  // Error
 }
+
+
+
+
+
+
 
 // Notes:
 // Remove C::
