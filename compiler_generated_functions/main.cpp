@@ -3,7 +3,7 @@
  compiler generated functions:
  1. copy constructor
  2. copy assignment operator
- 3. destructor
+ 3. constructor
  4. default destructor (only if no constructor declared)
  */
 
