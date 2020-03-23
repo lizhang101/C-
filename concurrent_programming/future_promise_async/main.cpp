@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include <future>
 using namespace std;
 
@@ -10,7 +12,7 @@ int factorial(int N) {
     return res;
 }
 
-int factorial(future<int> &f) {
+int factorial_1(future<int> &f) {
     int res = 1;
     // if promise is broken, this function will throw an exception:
     // std::future_errc::broken_promise
@@ -22,7 +24,7 @@ int factorial(future<int> &f) {
     cout << "thread result:" << res << endl;
     return res;
 }
-int factorial(shared_future<int> f) {
+int factorial_2(const shared_future<int> &f) {
     int res = 1;
     // if promise is broken, this function will throw an exception:
     // std::future_errc::broken_promise
@@ -57,9 +59,10 @@ int main() {
 
     /* promise */
     promise<int> p;
-    future<int> fu2 = async(launch::async, factorial, ref(f_p));
+    future<int> f_p = p.get_future();
+    future<int> fu2 = async(launch::async, factorial_1, ref(f_p));
     //You can only move a future, promise
-    future<int> fu_t = move(fu2);
+    //future<int> fu_t = move(fu2);
     // do something else...
     this_thread::sleep_for(chrono::milliseconds(100));
     p.set_value(4);
@@ -77,13 +80,13 @@ int main() {
      * note we also need to change the factorial().
      */
     promise<int> p1;
-    future<int> f_p = p1.get_future();
-    shared_future<int> sf = f_p.share(); //<<< KEY
-    future<int> fu_0 = async(launch::async, factorial, sf); // shared_future can be copied.
-    future<int> fu_1 = async(launch::async, factorial, sf);
-    future<int> fu_2 = async(launch::async, factorial, sf);
+    future<int> f_p2 = p1.get_future();
+    shared_future<int> sf = f_p2.share(); //<<< KEY
+    future<int> fu_0 = async(launch::async, factorial_2, sf); // shared_future can be copied.
+    future<int> fu_1 = async(launch::async, factorial_2, sf);
+    future<int> fu_2 = async(launch::async, factorial_2, sf);
     //.... more threads...
-    p.set_value(4);
+    p1.set_value(4);
     x = fu_0.get();
     cout << "shared_future promise factorial of 4: " << x << endl;
     return 0;
